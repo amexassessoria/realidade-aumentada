@@ -4,10 +4,5 @@
   "type": "ionic-angular",
   "integrations": {
     "cordova": {}
-  },
-  "proxies": [
-    {
-      "proxyUrl": "https://cors-anywhere.herokuapp.com/"
-    }
-  ]
+  }
 }
