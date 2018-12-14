@@ -6,6 +6,9 @@
 <script src="js/stats.min.js"></script>
 <!-- ar.js -->
 <script src="js/ar.js"></script>
+<script src='js/LoaderSupport.js'></script>
+<script src='js/MTLLoader.js'></script>
+<script src='js/OBJLoader.js'></script>
 <script>THREEx.ArToolkitContext.baseURL = '../'</script>
 
 <body style='margin : 0px; overflow: hidden; font-family: Monospace;'><div style='position: absolute; top: 10px; width:100%; text-align: center; z-index: 1;'>
@@ -141,13 +144,38 @@
 	}); 
 	var mesh	= new THREE.Mesh( geometry, material );
 	mesh.position.y	= geometry.parameters.height/2
-	arWorldRoot.add( mesh );
+	// arWorldRoot.add( mesh );
 	
 	var geometry	= new THREE.TorusKnotGeometry(0.3,0.1,64,16);
 	var material	= new THREE.MeshNormalMaterial(); 
 	var mesh	= new THREE.Mesh( geometry, material );
 	mesh.position.y	= 0.5
-	arWorldRoot.add( mesh );
+	// arWorldRoot.add( mesh );
+
+	var object = new THREE.ObjectLoader();
+
+	object.load("models/obj/sonic/sonic.json", 
+		// onLoad callback 
+		function(obj){
+			arWorldRoot.add(obj);
+		},
+		// onProgress callback
+		function ( xhr ) {
+			console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
+		},
+		// onError callback
+		function ( err ) {
+			console.error( 'An error happened' );
+		}
+	)
+
+	var onProgress = function ( xhr ) {
+		if ( xhr.lengthComputable ) {
+			var percentComplete = xhr.loaded / xhr.total * 100;
+			console.log( Math.round( percentComplete, 2 ) + '% downloaded' );
+		}
+	};
+	var onError = function () { };
 	
 	onRenderFcts.push(function(){
 		mesh.rotation.x += 0.1
